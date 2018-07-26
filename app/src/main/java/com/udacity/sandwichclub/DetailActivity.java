@@ -3,7 +3,9 @@ package com.udacity.sandwichclub;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -14,13 +16,25 @@ public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
+    private TextView AlsoKnown;
+    private TextView AlsoKnownLabel;
+    private TextView Origin;
+    private TextView OriginLabel;
+    private TextView Description;
+    private TextView Ingredient;
+    private ImageView Sandwich;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-        ImageView ingredientsIv = findViewById(R.id.image_iv);
+        Sandwich = findViewById(R.id.image);
+        AlsoKnown = findViewById(R.id.also_known);
+        AlsoKnownLabel = findViewById(R.id.alsoKnownAs_label);
+        Origin = findViewById(R.id.origin);
+        OriginLabel = findViewById(R.id.placeOfOrigin_label);
+        Description = findViewById(R.id.description);
+        Ingredient = findViewById(R.id.ingredients);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -43,10 +57,7 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        populateUI();
-        Picasso.with(this)
-                .load(sandwich.getImage())
-                .into(ingredientsIv);
+        populateUI(sandwich);
 
         setTitle(sandwich.getMainName());
     }
@@ -56,7 +67,52 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    private void populateUI() {
+    private void populateUI(Sandwich sandwich) {
 
+
+        // set Text to alsoKnownTv
+        if (sandwich.getAlsoKnownAs() != null && sandwich.getAlsoKnownAs().size() > 0) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(sandwich.getAlsoKnownAs().get(0));
+
+            for (int i = 1; i < sandwich.getAlsoKnownAs().size(); i++) {
+                stringBuilder.append(", ");
+                stringBuilder.append(sandwich.getAlsoKnownAs().get(i));
+            }
+            AlsoKnown.setText(stringBuilder.toString());
+        } else {
+            AlsoKnown.setVisibility(View.GONE);
+            AlsoKnownLabel.setVisibility(View.GONE);
+        }
+
+        // set Text to originTv
+        if (sandwich.getPlaceOfOrigin().isEmpty()) {
+            Origin.setVisibility(View.GONE);
+            OriginLabel.setVisibility(View.GONE);
+        } else {
+            Origin.setText(sandwich.getPlaceOfOrigin());
+        }
+
+        // set Text to descriptionTv
+        Description.setText(sandwich.getDescription());
+
+        // set Text to ingredientTv
+        if (sandwich.getIngredients() != null && sandwich.getIngredients().size() > 0) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("\u2022");
+            stringBuilder.append(sandwich.getIngredients().get(0));
+
+            for (int i = 1; i < sandwich.getIngredients().size(); i++) {
+                stringBuilder.append("\n");
+                stringBuilder.append("\u2022");
+                stringBuilder.append(sandwich.getIngredients().get(i));
+            }
+            Ingredient.setText(stringBuilder.toString());
+        }
+
+        // display the image
+        Picasso.with(this)
+                .load(sandwich.getImage())
+                .into(Sandwich);
     }
 }
