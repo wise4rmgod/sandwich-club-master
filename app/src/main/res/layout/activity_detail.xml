@@ -76,7 +76,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description_label"
-            tools:text="Bosna is a spicy Austrian fast food dish, said to have originated in either Salzburg or Linz. It is now popular all over western Austria and southern Bavaria." />
+            tools:text="description section." />
 
         <TextView
             android:id="@+id/ingredients"

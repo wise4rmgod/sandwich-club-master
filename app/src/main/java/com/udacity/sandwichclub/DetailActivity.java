@@ -29,12 +29,15 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Sandwich = findViewById(R.id.image);
-        AlsoKnown = findViewById(R.id.also_known);
-        AlsoKnownLabel = findViewById(R.id.alsoKnownAs_label);
-        Origin = findViewById(R.id.origin);
-        OriginLabel = findViewById(R.id.placeOfOrigin_label);
+
         Description = findViewById(R.id.description);
         Ingredient = findViewById(R.id.ingredients);
+        Origin = findViewById(R.id.origin);
+        AlsoKnown = findViewById(R.id.also_known);
+        OriginLabel = findViewById(R.id.placeOfOrigin_label);
+
+        AlsoKnownLabel = findViewById(R.id.alsoKnownAs_label);
+
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -48,11 +51,11 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
-        String json = sandwiches[position];
+        String[] sandwichesarray = getResources().getStringArray(R.array.sandwich_details);
+        String json = sandwichesarray[position];
         Sandwich sandwich = JsonUtils.parseSandwichJson(json);
         if (sandwich == null) {
-            // Sandwich data unavailable
+            //Checks for Sandwich data unavailability
             closeOnError();
             return;
         }
@@ -64,13 +67,14 @@ public class DetailActivity extends AppCompatActivity {
 
     private void closeOnError() {
         finish();
+        //Toast error using the R.string.detail_error_message in string
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
     private void populateUI(Sandwich sandwich) {
 
 
-        // set Text to alsoKnownTv
+        // set Text to alsoKnown(TextView)
         if (sandwich.getAlsoKnownAs() != null && sandwich.getAlsoKnownAs().size() > 0) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(sandwich.getAlsoKnownAs().get(0));
@@ -85,7 +89,7 @@ public class DetailActivity extends AppCompatActivity {
             AlsoKnownLabel.setVisibility(View.GONE);
         }
 
-        // set Text to originTv
+        // set Text to origin(Textiew)
         if (sandwich.getPlaceOfOrigin().isEmpty()) {
             Origin.setVisibility(View.GONE);
             OriginLabel.setVisibility(View.GONE);
@@ -93,10 +97,10 @@ public class DetailActivity extends AppCompatActivity {
             Origin.setText(sandwich.getPlaceOfOrigin());
         }
 
-        // set Text to descriptionTv
+        // set Text to description(TextView)
         Description.setText(sandwich.getDescription());
 
-        // set Text to ingredientTv
+        // set Text to ingredient(TextView)
         if (sandwich.getIngredients() != null && sandwich.getIngredients().size() > 0) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("\u2022");
